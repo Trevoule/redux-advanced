@@ -4,8 +4,7 @@ import Cart from "./components/Cart/Cart";
 import Layout from "./components/Layout/Layout";
 import Products from "./components/Shop/Products";
 import Notification from "./components/Notification/Notification";
-
-import { uiActions } from "./components/store/ui-slice";
+import { sendCartData } from "./components/store/cart-slice";
 
 let isInitial = true;
 
@@ -16,55 +15,53 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const sendCartData = async () => {
-      dispatch(
-        uiActions.showNotification({
-          status: "pending",
-          title: "Sending...",
-          message: "Sending Cart data",
-        })
-      );
-      const response = await fetch(
-        "https://react-fetch-movies-12638-default-rtdb.firebasio.com/cart.json",
-        {
-          method: "PUT",
-          body: JSON.stringify(cart),
-        }
-      );
-
-      if (!response.ok) {
-        dispatch(
-          uiActions.showNotification({
-            status: "error",
-            title: "Error",
-            message: "Sending data failed!",
-          })
-        );
-      }
-
-      dispatch(
-        uiActions.showNotification({
-          status: "success",
-          title: "Success",
-          message: "Sent cart data successfully!",
-        })
-      );
-    };
-
+    // const sendCartData = async () => {
+    // //   dispatch(
+    // //     uiActions.showNotification({
+    // //       status: "pending",
+    // //       title: "Sending...",
+    // //       message: "Sending Cart data",
+    // //     })
+    // //   );
+    // //   const response = await fetch(
+    // //     "https://react-fetch-movies-12638-default-rtdb.firebasio.com/cart.json",
+    // //     {
+    // //       method: "PUT",
+    // //       body: JSON.stringify(cart),
+    // //     }
+    // //   );
+    // //   if (!response.ok) {
+    // //     dispatch(
+    // //       uiActions.showNotification({
+    // //         status: "error",
+    // //         title: "Error",
+    // //         message: "Sending data failed!",
+    // //       })
+    // //     );
+    // //   }
+    // //   dispatch(
+    // //     uiActions.showNotification({
+    // //       status: "success",
+    // //       title: "Success",
+    // //       message: "Sent cart data successfully!",
+    // //     })
+    // //   );
+    // };
     if (isInitial) {
       isInitial = false;
       return;
     }
 
-    sendCartData().catch((error) => {
-      dispatch(
-        uiActions.showNotification({
-          status: "error",
-          title: "Error",
-          message: "Sending data failed!",
-        })
-      );
-    });
+    dispatch(sendCartData(cart));
+    // sendCartData().catch((error) => {
+    //   dispatch(
+    //     uiActions.showNotification({
+    //       status: "error",
+    //       title: "Error",
+    //       message: "Sending data failed!",
+    //     })
+    //   );
+    // });
   }, [cart, dispatch]);
 
   return (
